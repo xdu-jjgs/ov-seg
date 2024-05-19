@@ -47,7 +47,7 @@ The checkpoints would be save in logs. We have to replace the orginal CLIP in Ma
 cd tools
 python ovseg_replace_clip.py
 # Test new checkpoint, make sure that MODEL.CLIP_ADAPTER.MASK_PROMPT_FWD is set to False
-python train_net.py --num-gpu 8 --eval-only --config-file configs/ovseg_swinB_vitL_bs32_120k.yaml MODEL.CLIP_ADAPTER.MASK_PROMPT_FWD False MODEL.WEIGHTS #PATH_to_new_stored_clpt DATASETS.TEST \(\"ade20k_sem_seg_val\",\)
+python train_net.py --num-gpu 2 --eval-only --config-file configs/ovseg_R101c_vitB_bs32_120k.yaml MODEL.CLIP_ADAPTER.MASK_PROMPT_FWD False MODEL.WEIGHTS open_clip_training/src/logs/vitB_baseline_full+mpt/best.pth DATASETS.TEST "('ade20k_sem_seg_val',)" 
 ```
 
 ## Mask prompt tuning

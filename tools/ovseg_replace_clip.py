@@ -6,7 +6,7 @@ from collections import OrderedDict
 
 
 # PATH to finetune clip model
-clip_ckpt = torch.load('/home/jeffliang/ov-seg/open_clip_training/src/logs/2023_05_29-16_27_38-mask_prompt_tuning-model_ViT-L-14-lr_0.05-b_32-j_4-p_amp/checkpoints/epoch_2.pt')
+clip_ckpt = torch.load('../open_clip_training/src/logs/2024_05_06-11_14_31-mask_prompt_tuning-model_ViT-B-16-lr_0.05-b_256-j_0-p_amp/checkpoints/epoch_5.pt')
 
 new_model = OrderedDict()
 state_dict = clip_ckpt['state_dict']
@@ -16,7 +16,7 @@ for k, v in state_dict.items():
     new_model[new_key] = v
 
 # PATH to trained MaskFormer model
-ovseg_model = torch.load('/home/jeffliang/ov-seg/weights/ovseg_swinbase_vitL14_mpt_only.pth', 'cpu')
+ovseg_model = torch.load('../output/vitB_baseline/model_0109999.pth', 'cpu')
 
 for k, v in new_model.items():
     new_k = 'clip_adapter.clip_model.' + k
@@ -30,4 +30,4 @@ try:
 except:
     print('clip_ckpt does not have mask_embedding, remember to set MODEL.CLIP_ADAPTER.MASK_PROMPT_FWD False during OVSeg evaluation')
 
-torch.save(ovseg_model, '/home/jeffliang/ov-seg/weights/new_ovseg.pth')
+torch.save(ovseg_model, '../open_clip_training/src/logs/vitB_baseline_full+mpt/last.pth')

@@ -16,12 +16,14 @@ We release our largest model (Swin-Base + CLIP-ViT-L/14) [ovseg_swinbase_vitL14_
 
 - Test on ADE20K-150 and ADE-847
   ```bash
-  python train_net.py --num-gpu 8 --eval-only --config-file configs/ovseg_swinB_vitL_bs32_120k.yaml MODEL.WEIGHTS #PATH_of_ovseg_swinbase_vitL14_ft_mpt.pth DATASETS.TEST \(\"ade20k_sem_seg_val\",\"ade20k_full_sem_seg_val\"\) 
+  python train_net.py --num-gpu 2 --eval-only --config-file configs/ovseg_swinB_vitL_bs32_120k.yaml MODEL.WEIGHTS pretrained/ovseg_swinbase_vitL14_ft_mpt.pth DATASETS.TEST "('ade20k_sem_seg_val',)" 
   ```
+mIoU,fwIoU,mACC,pACC
+29.5879,57.3323,47.9414,68.9308
 
 - Test on PascalContext-59 and PascalContext-459
   ```bash
-  python train_net.py --num-gpu 8 --eval-only --config-file configs/ovseg_swinB_vitL_bs32_120k.yaml MODEL.WEIGHTS #PATH_of_ovseg_swinbase_vitL14_ft_mpt.pth MODEL.CLIP_ADAPTER.CLIP_ENSEMBLE_WEIGHT 0.6  DATASETS.TEST \(\"pascal_context_59_sem_seg_val\",\"pascal_context_459_sem_seg_val\",\)
+  python train_net.py --num-gpu 2 --eval-only --config-file configs/ovseg_swinB_vitL_bs32_120k.yaml MODEL.WEIGHTS #PATH_of_ovseg_swinbase_vitL14_ft_mpt.pth MODEL.CLIP_ADAPTER.CLIP_ENSEMBLE_WEIGHT 0.6  DATASETS.TEST \(\"pascal_context_59_sem_seg_val\",\"pascal_context_459_sem_seg_val\",\)
   ```
 
 - Test on PascalVOC-20
@@ -33,7 +35,7 @@ You may also want to try our small model (R101c + CLIP-ViT-B/16) [ovseg_R101c_vi
 
 - Test on ADE20K-150
   ```bash
-  python train_net.py --num-gpu 8 --eval-only --config-file configs/ovseg_R101c_vitB_bs32_120k.yaml MODEL.WEIGHTS #PATH_of_ovseg_R101c_vitB16_ft_mpt.pth DATASETS.TEST \(\"ade20k_sem_seg_val\",\) 
+  python train_net.py --num-gpu 2 --eval-only --config-file configs/ovseg_R101c_vitB_bs32_120k.yaml MODEL.WEIGHTS output/pretrained/ovseg_R101c_vitB16_ft_mpt.pth.pt DATASETS.TEST "('ade20k_sem_seg_val',)" 
   ```
 
 #### Performance benchmark
@@ -64,7 +66,7 @@ You may also want to try our small model (R101c + CLIP-ViT-B/16) [ovseg_R101c_vi
 Download the checkpoint with mpt only [ovseg_swinbase_vitL14_mpt_only.pt](https://drive.google.com/file/d/1LJGWFjHw76OGDNy9r9KQIaACfIm9KMhQ/view?usp=sharing) (md5: <tt>2dd495</tt>).
 
   ```bash
-  python train_net.py --num-gpu 8 --eval-only --config-file configs/ovseg_swinB_vitL_bs32_120k.yaml MODEL.WEIGHTS #PATH_of_ovseg_swinbase_vitL14_mpt_only.pt DATASETS.TEST \(\"ade20k_sem_seg_val\",\"ade20k_full_sem_seg_val\"\) 
+  python train_net.py --num-gpu 2 --eval-only --config-file configs/ovseg_swinB_vitL_bs32_120k.yaml MODEL.WEIGHTS #PATH_of_ovseg_swinbase_vitL14_mpt_only.pt DATASETS.TEST \(\"ade20k_sem_seg_val\",\"ade20k_full_sem_seg_val\"\) 
   ```
   
 - Mask prompt tuning can improve over fully finetuned model (Table 3 in [paper](https://arxiv.org/pdf/2210.04150.pdf))
@@ -89,14 +91,16 @@ With the same [ovseg_swinbase_vitL14_ft_mpt.pth](https://drive.google.com/file/d
   
 - Training baseline w/ original CLIP
   ```
-  python train_net.py --num-gpu 8 --config-file configs/ovseg_swinB_vitL_bs32_120k.yaml MODEL.CLIP_ADAPTER.MASK_PROMPT_FWD False
+  python train_net.py --num-gpu 2 --config-file configs/ovseg_swinB_vitL_bs32_120k.yaml MODEL.CLIP_ADAPTER.MASK_PROMPT_FWD False
+  python train_net.py --num-gpu 2 --config-file configs/ovseg_R101c_vitB_bs32_120k.yaml MODEL.CLIP_ADAPTER.MASK_PROMPT_FWD False
   ```
 
 To reproduce our final results, you may want to use the our mask-adapted CLIP
 
 - Training ovseg w/ mask-adapted CLIP
   ```
-  python train_net.py --num-gpu 8 --config-file configs/ovseg_swinB_vitL_bs32_120k.yaml MODEL.CLIP_ADAPTER.CLIP_MODEL_NAME #PATH_TO_MASKADAPTED_CLIP
+  python train_net.py --num-gpu 2 --config-file configs/ovseg_swinB_vitL_bs32_120k.yaml MODEL.CLIP_ADAPTER.CLIP_MODEL_NAME #PATH_TO_MASKADAPTED_CLIP
+  python train_net.py --num-gpu 2 --config-file configs/ovseg_R101c_vitB_bs32_120k.yaml MODEL.CLIP_ADAPTER.CLIP_MODEL_NAME open_clip_training/src/logs/2024_05_09-17_40_22-mask_prompt_tuning-model_ViT-B-16-lr_0.05-b_256-j_0-p_amp/checkpoints/epoch_1.pt
   ```
   
 CAUTION: The final results is sensitive to the ensemble (appendix A.5 in [paper](https://arxiv.org/pdf/2210.04150.pdf)). Thus, you may want to use the ```tools/search_thr_ensemble_w.sh``` to find the best ensemble hyper-parameters.

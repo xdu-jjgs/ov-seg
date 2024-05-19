@@ -6,9 +6,10 @@ h5py
 wandb
 fire
 opencv-python
+openai-clip
 pandas
 braceexpand
 torch-ema
-torchmetrics==0.11.4
-setuptools==59.5.0
+torchmetrics
+setuptools
 webdataset>=0.2.5

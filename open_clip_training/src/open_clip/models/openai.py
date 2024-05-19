@@ -9,7 +9,7 @@ from typing import Union, List
 
 import torch
 
-from .model import build_model_from_openai_state_dict
+from .backbones import build_model_from_openai_state_dict
 from .pretrained import get_pretrained_url, list_pretrained_tag_models, download_pretrained
 
 __all__ = ["list_openai_models", "load_openai_model"]

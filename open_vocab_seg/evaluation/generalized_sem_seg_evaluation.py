@@ -64,11 +64,11 @@ class GeneralizedSemSegEvaluator(SemSegEvaluator):
                 output["sem_seg"], image=np.array(Image.open(input["file_name"]))
             )
             output = output.argmax(dim=0).to(self._cpu_device)
-            pred = np.array(output, dtype=np.int)
+            pred = np.array(output, dtype=np.int_)
             with PathManager.open(
                 self.input_file_to_gt_file[input["file_name"]], "rb"
             ) as f:
-                gt = np.array(Image.open(f), dtype=np.int)
+                gt = np.array(Image.open(f), dtype=np.int_)
 
             gt[gt == self._ignore_label] = self._num_classes
 
@@ -106,12 +106,12 @@ class GeneralizedSemSegEvaluator(SemSegEvaluator):
             with PathManager.open(file_path, "w") as f:
                 f.write(json.dumps(self._predictions))
 
-        acc = np.full(self._num_classes, np.nan, dtype=np.float)
-        iou = np.full(self._num_classes, np.nan, dtype=np.float)
-        tp = self._conf_matrix.diagonal()[:-1].astype(np.float)
-        pos_gt = np.sum(self._conf_matrix[:-1, :-1], axis=0).astype(np.float)
+        acc = np.full(self._num_classes, np.nan, dtype=np.float32)
+        iou = np.full(self._num_classes, np.nan, dtype=np.float32)
+        tp = self._conf_matrix.diagonal()[:-1].astype(np.float32)
+        pos_gt = np.sum(self._conf_matrix[:-1, :-1], axis=0).astype(np.float32)
         class_weights = pos_gt / np.sum(pos_gt)
-        pos_pred = np.sum(self._conf_matrix[:-1, :-1], axis=1).astype(np.float)
+        pos_pred = np.sum(self._conf_matrix[:-1, :-1], axis=1).astype(np.float32)
         acc_valid = pos_gt > 0
         acc[acc_valid] = tp[acc_valid] / pos_gt[acc_valid]
         iou_valid = (pos_gt + pos_pred) > 0
@@ -134,8 +134,8 @@ class GeneralizedSemSegEvaluator(SemSegEvaluator):
         if self._evaluation_set is not None:
             for set_name, set_inds in self._evaluation_set.items():
                 iou_list = []
-                set_inds = np.array(set_inds, np.int)
-                mask = np.zeros((len(iou),)).astype(np.bool)
+                set_inds = np.array(set_inds, np.int_)
+                mask = np.zeros((len(iou),)).astype(np.bool_)
                 mask[set_inds] = 1
                 miou = np.sum(iou[mask][acc_valid[mask]]) / np.sum(iou_valid[mask])
                 pacc = np.sum(tp[mask]) / np.sum(pos_gt[mask])

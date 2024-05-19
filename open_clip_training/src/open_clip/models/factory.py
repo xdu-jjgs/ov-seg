@@ -1,7 +1,6 @@
 import json
 import logging
 import os
-import pathlib
 import re
 from copy import deepcopy
 from pathlib import Path
@@ -9,7 +8,7 @@ from typing import Optional, Tuple
 
 import torch
 
-from .model import CLIP, convert_weights_to_fp16, resize_pos_embed
+from .backbones import CLIP, convert_weights_to_fp16, resize_pos_embed
 from .openai import load_openai_model
 from .pretrained import get_pretrained_url, download_pretrained
 from .transform import image_transform
